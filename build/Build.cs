@@ -1,21 +1,21 @@
-﻿using Nuke.Common;
-using Nuke.Common.Git;
-using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
-using Nuke.Common.Tools.AzureKeyVault;
-using Nuke.Common.Tools.GitVersion;
-using Nuke.Common.Utilities.Collections;
-using Nuke.GitHub;
+using Fallout.Common;
+using Fallout.Common.Git;
+using Fallout.Common.IO;
+using Fallout.Common.ProjectModel;
+using Fallout.Common.Tools.AzureKeyVault;
+using Fallout.Common.Tools.GitVersion;
+using Fallout.Common.Utilities.Collections;
+using Fallout.GitHub;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static Nuke.Common.ChangeLog.ChangelogTasks;
-using static Nuke.Common.IO.PathConstruction;
-using static Nuke.Common.Tools.Npm.NpmTasks;
-using static Nuke.GitHub.GitHubTasks;
+using static Fallout.Common.ChangeLog.ChangelogTasks;
+using static Fallout.Common.IO.PathConstruction;
+using static Fallout.Common.Tools.Npm.NpmTasks;
+using static Fallout.GitHub.GitHubTasks;
 
-class Build : NukeBuild
+class Build : FalloutBuild
 {
     public static int Main() => Execute<Build>(x => x.Clean);
 
@@ -122,8 +122,8 @@ class Build : NukeBuild
     Target NgLibraryPublish => _ => _
         .DependsOn(NgLibraryBuild)
         .Requires(() => NpmDanglJenkinsAccessToken)
-        .OnlyWhenDynamic(() => Nuke.Common.CI.Jenkins.Jenkins.Instance == null
-            || Nuke.Common.CI.Jenkins.Jenkins.Instance.ChangeId == null)
+        .OnlyWhenDynamic(() => Fallout.Common.CI.Jenkins.Jenkins.Instance == null
+            || Fallout.Common.CI.Jenkins.Jenkins.Instance.ChangeId == null)
         .Executes(() =>
         {
             var npmTag = GitVersion.BranchName.Equals("master") || GitVersion.BranchName.Equals("origin/master")
