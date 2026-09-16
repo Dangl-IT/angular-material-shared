@@ -15,25 +15,25 @@ pipeline {
         KeyVaultTenantId = credentials('AzureKeyVaultTenantId')
     }
     stages {
-        stage ('Test') {
+        stage('Test') {
             steps {
                 powershell './build.ps1 NgLibraryTest'
             }
             post {
                 always {
-					recordIssues(
-						tools: [
-							taskScanner(
-								excludePattern: '**/*node_modules/**/*, **/*tinymce-langs/**/*, **/*tinymce-assets/**/*', 
-								highTags: 'HACK, FIXME', 
-								ignoreCase: true, 
-								includePattern: '**/*.cs, **/*.g4, **/*.ts, **/*.js', 
-								normalTags: 'TODO')
-							]) 
+                    recordIssues(
+                        tools: [
+                            taskScanner(
+                                excludePattern: '**/*node_modules/**/*, **/*tinymce-langs/**/*, **/*tinymce-assets/**/*',
+                                highTags: 'HACK, FIXME',
+                                ignoreCase: true,
+                                includePattern: '**/*.cs, **/*.g4, **/*.ts, **/*.js',
+                                normalTags: 'TODO')
+                            ])
                 }
             }
         }
-        stage ('Publish npm library') {
+        stage('Publish npm library') {
             steps {
                 powershell './build.ps1 NgLibraryPublish+PublishGitHubRelease'
             }
@@ -43,7 +43,7 @@ pipeline {
         always {
             step([$class: 'Mailer',
                 notifyEveryUnstableBuild: true,
-                recipients: "georg@dangl.me",
+                recipients: 'georg@dangl.me',
                 sendToIndividuals: true])
             cleanWs()
         }
